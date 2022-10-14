@@ -15,13 +15,22 @@ class NewsApiTest extends TestCase
     {
         parent::setUp();
 
-        $this->actingAs(User::factory()->create());
+        $this->user = User::factory()->create();
     }
+
+    /** @test */
+    public function user_should_be_authenticated_before_use_the_api()
+    {
+        $response = $this->get('/api/news');
+
+        $response->assertStatus(401);
+    }
+
 
     /** @test */
     public function test_get_news_feed()
     {
-        $response = $this->get('/api/news');
+        $response = $this->be($this->user)->get('/api/news');
 
         $response->assertStatus(200);
     }
@@ -30,7 +39,7 @@ class NewsApiTest extends TestCase
     public function it_should_return_a_valid_response()
     {
 
-        $response = $this->get('/api/news');
+        $response = $this->be($this->user)->get('/api/news');
 
         $response->assertJsonStructure([['headline', 'link']]);
     }
@@ -38,7 +47,7 @@ class NewsApiTest extends TestCase
     /** @test */
     public function it_should_return_error_if_the_query_is_empty()
     {
-        $response = $this->get('/api/news?query=');
+        $response = $this->be($this->user)->get('/api/news?query=');
 
         $response
             ->assertStatus(400)
