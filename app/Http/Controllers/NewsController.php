@@ -16,8 +16,10 @@ class NewsController extends Controller
             $apiClient = new NewsApi(env('NEWS_API_KEY'));
 
             $query = data_get($request->input(), 'query', '*');
+            $input = $request->input();
+            $input['q'] = $query;
 
-            return $apiClient->query(['q'=> $query]);
+            return $apiClient->query($input);
 
         }catch (EmptyQueryException $e){
             return response(['error' => 'query is missing'], 400);
