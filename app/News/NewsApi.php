@@ -52,6 +52,7 @@ class NewsApi implements NewsApiClientInterface
             $results[] = [
                 'headline' => $article['title'],
                 'link' => $article['url'],
+                'source' => 'newsapi'
             ];
         }
 
